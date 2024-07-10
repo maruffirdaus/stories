@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home">Beranda</string>
+    <string name="settings">Pengaturan</string>
+    <string name="new_story">Cerita baru</string>
+    <string name="login">Masuk</string>
+    <string name="do_not_have_an_account">Tidak memiliki akun?</string>
+    <string name="register">Daftar</string>
+    <string name="name">Nama</string>
+    <string name="cancel">Batal</string>
+    <string name="password_error">Password tidak boleh kurang dari 8 karakter</string>
+    <string name="email_error">Format email tidak valid</string>
+    <string name="logout">Logout</string>
+    <string name="login_failed">Gagal masuk</string>
+    <string name="close">Tutup</string>
+    <string name="password_can_not_be_empty">Password tidak boleh kosong</string>
+    <string name="email_can_not_be_empty">Email tidak boleh kosong</string>
+    <string name="registration_success">Registrasi berhasil</string>
+    <string name="registration_has_been_successful">Registrasi berhasil dilakukan.</string>
+    <string name="registration_failed">Registrasi gagal</string>
+    <string name="all_columns_must_be_filled_in_correctly">Semua kolom harus terisi dengan benar.</string>
+    <string name="user">Pengguna</string>
+    <string name="you_will_be_logged_out">Anda akan logout.</string>
+    <string name="yes">Ya</string>
+    <string name="no">Tidak</string>
+    <string name="date">Tanggal</string>
+    <string name="description">Deskripsi</string>
+    <string name="error">Error</string>
+    <string name="refresh">Refresh</string>
+    <string name="story">Cerita</string>
+    <string name="anything_to_say">Ada yang ingin dikatakan?</string>
+    <string name="send">Kirim</string>
+    <string name="can_not_be_empty">Tidak boleh kosong</string>
+    <string name="no_data">Tidak ada data.</string>
+</resources>

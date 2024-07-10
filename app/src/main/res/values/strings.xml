@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name" translatable="false">Stories</string>
+    <string name="home">Home</string>
+    <string name="settings">Settings</string>
+    <string name="new_story">New story</string>
+    <string name="email" translatable="false">Email</string>
+    <string name="password" translatable="false">Password</string>
+    <string name="login">Login</string>
+    <string name="do_not_have_an_account">Don\'t have an account?</string>
+    <string name="register">Register</string>
+    <string name="name">Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="password_error">Password can\'t be less than 8 characters</string>
+    <string name="email_error">Invalid email format</string>
+    <string name="logout">Logout</string>
+    <string name="login_failed">Login failed</string>
+    <string name="close">Close</string>
+    <string name="password_can_not_be_empty">Password can\'t be empty</string>
+    <string name="email_can_not_be_empty">Email can\'t be empty</string>
+    <string name="registration_success">Registration success</string>
+    <string name="registration_has_been_successful">Registration has been successful.</string>
+    <string name="registration_failed">Registration failed</string>
+    <string name="all_columns_must_be_filled_in_correctly">All columns must be filled in correctly.</string>
+    <string name="user">User</string>
+    <string name="you_will_be_logged_out">You will be logged out.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="date">Date</string>
+    <string name="description">Description</string>
+    <string name="error">Error</string>
+    <string name="refresh">Refresh</string>
+    <string name="story">Story</string>
+    <string name="anything_to_say">Anything to say?</string>
+    <string name="send">Send</string>
+    <string name="can_not_be_empty">Can\'t be empty</string>
+    <string name="no_data">No data.</string>
+    <string name="language">Language</string>
+</resources>
