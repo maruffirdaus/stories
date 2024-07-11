@@ -32,4 +32,5 @@
     <string name="send">Kirim</string>
     <string name="can_not_be_empty">Tidak boleh kosong</string>
     <string name="no_data">Tidak ada data.</string>
+    <string name="language">Bahasa</string>
 </resources>

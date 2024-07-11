@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.util.Pair
@@ -33,7 +32,7 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
         private val binding: ItemRowStoryBinding
     ) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(story: StoryEntity, position: Int) {
+        fun bind(story: StoryEntity) {
             with(binding) {
                 tvItemName.text = story.name
                 Glide.with(context)
@@ -41,12 +40,6 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
                     .into(binding.ivItemPhoto)
                 date.text = DateHelper.covertDate(story.createdAt)
                 description.text = story.description
-
-                if (position == listStory.lastIndex) {
-                    divider.visibility = View.GONE
-                } else {
-                    divider.visibility = View.VISIBLE
-                }
 
                 main.setOnClickListener {
                     val optionsCompat =
@@ -69,7 +62,7 @@ class StoryAdapter : RecyclerView.Adapter<StoryAdapter.StoryViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: StoryViewHolder, position: Int) {
-        holder.bind(listStory[position], position)
+        holder.bind(listStory[position])
     }
 
     override fun getItemCount(): Int = listStory.size

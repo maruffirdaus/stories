@@ -45,7 +45,6 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
-                    android:transitionName="profile"
                     app:srcCompat="@drawable/ic_account_circle" />
 
                 <TextView
@@ -60,8 +59,7 @@
                     android:maxLines="1"
                     android:text="@string/user"
                     android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                    android:textColor="?attr/colorOnSurface"
-                    android:transitionName="name" />
+                    android:textColor="?attr/colorOnSurface" />
 
             </LinearLayout>
 
@@ -97,8 +95,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="@string/description"
                 android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-                android:textColor="?attr/colorOnSurface"
-                android:transitionName="description" />
+                android:textColor="?attr/colorOnSurface" />
 
         </LinearLayout>
 

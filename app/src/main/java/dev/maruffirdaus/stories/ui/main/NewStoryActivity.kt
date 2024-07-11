@@ -1,5 +1,6 @@
 package dev.maruffirdaus.stories.ui.main
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
@@ -17,11 +18,12 @@ import dev.maruffirdaus.stories.R
 import dev.maruffirdaus.stories.data.LoginPreferences
 import dev.maruffirdaus.stories.data.Result
 import dev.maruffirdaus.stories.data.dataStore
+import dev.maruffirdaus.stories.data.source.remote.response.LoginResult
 import dev.maruffirdaus.stories.databinding.ActivityNewStoryBinding
 import dev.maruffirdaus.stories.helper.reduceFileImage
 import dev.maruffirdaus.stories.helper.uriToFile
-import dev.maruffirdaus.stories.ui.MainViewModel
 import dev.maruffirdaus.stories.ui.ViewModelFactory
+import dev.maruffirdaus.stories.ui.main.viewmodel.NewStoryViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -35,9 +37,9 @@ import okhttp3.RequestBody.Companion.toRequestBody
 
 class NewStoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNewStoryBinding
-    private var loginResult: Set<String>? = null
     private var imageUri: String? = null
-    private lateinit var viewModel: MainViewModel
+    private var loginResult: LoginResult? = null
+    private lateinit var viewModel: NewStoryViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,12 +89,19 @@ class NewStoryActivity : AppCompatActivity() {
 
     private fun getLoginResult() {
         val loginPref = LoginPreferences.getInstance(dataStore)
-        loginResult = runBlocking { loginPref.getLoginResult().first() }
+        val loginResultSet = runBlocking { loginPref.getLoginResult().first() }
+        if (loginResultSet != null) {
+            loginResult = LoginResult(
+                loginResultSet.elementAt(0),
+                loginResultSet.elementAt(1),
+                loginResultSet.elementAt(2)
+            )
+        }
     }
 
     private fun obtainViewModel() {
         val factory = ViewModelFactory.getInstance(application, this)
-        viewModel = ViewModelProvider(this, factory)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(this, factory)[NewStoryViewModel::class.java]
     }
 
     private fun setToolbarMenuItemClick() {
@@ -124,7 +133,7 @@ class NewStoryActivity : AppCompatActivity() {
     private fun sendStory(desc: String) {
         if (imageUri != null) {
             lifecycleScope.launch {
-                val token = "Bearer " + (loginResult?.elementAt(2) ?: "token")
+                val token = "Bearer " + (loginResult?.token ?: "token")
                 val multipartBody: MultipartBody.Part
                 val requestBody = desc.toRequestBody("text/plain".toMediaType())
 
@@ -143,8 +152,9 @@ class NewStoryActivity : AppCompatActivity() {
                 viewModel.sendStory(token, multipartBody, requestBody)
                     .observe(this@NewStoryActivity) {
                         if (it is Result.Success) {
-                            viewModel.getStories(token)
-                            finish()
+                            val intent = Intent(this@NewStoryActivity, MainActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                            startActivity(intent)
                         } else if (it is Result.Error) {
                             hideLoadingScreen()
                             if (!hasDialogAppeared) {
@@ -168,7 +178,7 @@ class NewStoryActivity : AppCompatActivity() {
             Glide.with(this@NewStoryActivity)
                 .load(imageUri)
                 .into(photo)
-            name.text = loginResult?.elementAt(1) ?: getString(R.string.user)
+            name.text = loginResult?.name ?: getString(R.string.user)
             edAddDescription.editText?.requestFocus()
             lifecycleScope.launch {
                 delay(200)

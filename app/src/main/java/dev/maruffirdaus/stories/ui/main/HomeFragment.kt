@@ -15,10 +15,12 @@ import dev.maruffirdaus.stories.R
 import dev.maruffirdaus.stories.data.LoginPreferences
 import dev.maruffirdaus.stories.data.Result
 import dev.maruffirdaus.stories.data.dataStore
+import dev.maruffirdaus.stories.data.source.remote.response.LoginResult
 import dev.maruffirdaus.stories.databinding.FragmentHomeBinding
-import dev.maruffirdaus.stories.ui.MainViewModel
+import dev.maruffirdaus.stories.ui.DividerItemDecoration
 import dev.maruffirdaus.stories.ui.StoryAdapter
 import dev.maruffirdaus.stories.ui.ViewModelFactory
+import dev.maruffirdaus.stories.ui.main.viewmodel.MainViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -26,8 +28,8 @@ import kotlinx.coroutines.runBlocking
 
 class HomeFragment : Fragment() {
     private lateinit var binding: FragmentHomeBinding
+    private var loginResult: LoginResult? = null
     private lateinit var viewModel: MainViewModel
-    private var loginResult: Set<String>? = null
     private val adapter = StoryAdapter()
 
     override fun onCreateView(
@@ -40,6 +42,7 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        getLoginResult()
         obtainViewModel()
         setToolbarMenuItemClick()
         setupScrollListener()
@@ -56,6 +59,18 @@ class HomeFragment : Fragment() {
             }
         }
 
+    private fun getLoginResult() {
+        val loginPref = LoginPreferences.getInstance(requireActivity().dataStore)
+        val loginResultSet = runBlocking { loginPref.getLoginResult().first() }
+        if (loginResultSet != null) {
+            loginResult = LoginResult(
+                loginResultSet.elementAt(0),
+                loginResultSet.elementAt(1),
+                loginResultSet.elementAt(2)
+            )
+        }
+    }
+
     private fun obtainViewModel() {
         val factory = ViewModelFactory.getInstance(requireActivity().application, requireActivity())
         viewModel = ViewModelProvider(requireActivity(), factory)[MainViewModel::class.java]
@@ -67,7 +82,7 @@ class HomeFragment : Fragment() {
                 when (it.itemId) {
                     R.id.refresh -> {
                         nestedScrollView.smoothScrollTo(nestedScrollView.scrollX, 0)
-                        viewModel.getStories("Bearer " + (loginResult?.elementAt(2) ?: "token"))
+                        viewModel.getStories("Bearer " + (loginResult?.token ?: "token"))
                         true
                     }
 
@@ -105,12 +120,11 @@ class HomeFragment : Fragment() {
 
     private fun setupRecyclerView() {
         with(binding) {
+            recyclerView.isNestedScrollingEnabled = false
             recyclerView.layoutManager = LinearLayoutManager(requireActivity())
+            recyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), R.drawable.divider))
             recyclerView.adapter = adapter
-
-            val loginPref = LoginPreferences.getInstance(requireActivity().dataStore)
-            loginResult = runBlocking { loginPref.getLoginResult().first() }
-            viewModel.getStories("Bearer " + (loginResult?.elementAt(2) ?: "token"))
+            viewModel.getStories("Bearer " + (loginResult?.token ?: "token"))
 
             viewModel.listStory.observe(viewLifecycleOwner) {
                 when (it) {

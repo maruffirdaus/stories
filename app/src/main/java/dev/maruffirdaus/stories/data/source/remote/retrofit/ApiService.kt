@@ -1,9 +1,9 @@
 package dev.maruffirdaus.stories.data.source.remote.retrofit
 
+import dev.maruffirdaus.stories.data.source.remote.response.GeneralResponse
+import dev.maruffirdaus.stories.data.source.remote.response.GetResponse
 import dev.maruffirdaus.stories.data.source.remote.response.LoginResponse
-import dev.maruffirdaus.stories.data.source.remote.response.RegisterResponse
 import dev.maruffirdaus.stories.data.source.remote.response.SendResponse
-import dev.maruffirdaus.stories.data.source.remote.response.StoryResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -22,7 +22,7 @@ interface ApiService {
         @Field("name") name: String,
         @Field("email") email: String,
         @Field("password") password: String
-    ): Call<RegisterResponse>
+    ): Call<GeneralResponse>
 
     @FormUrlEncoded
     @POST("login")
@@ -34,7 +34,7 @@ interface ApiService {
     @GET("stories")
     fun getStories(
         @Header("Authorization") token: String
-    ): Call<StoryResponse>
+    ): Call<GetResponse>
 
     @Multipart
     @POST("stories")

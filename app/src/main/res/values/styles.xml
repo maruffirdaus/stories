@@ -3,17 +3,24 @@
     <style name="TextAppearance.Stories.PlayballDisplayLarge" parent="TextAppearance.Material3.DisplayLarge">
         <item name="fontFamily">@font/playball</item>
     </style>
+
     <style name="TextAppearance.Stories.PlayballDisplayMedium" parent="TextAppearance.Material3.DisplayMedium">
         <item name="fontFamily">@font/playball</item>
     </style>
+
     <style name="TextAppearance.Stories.PlayballHeadlineLarge" parent="TextAppearance.Material3.HeadlineLarge">
         <item name="fontFamily">@font/playball</item>
     </style>
+
     <style name="Corner">
         <item name="cornerSizeTopRight">12dp</item>
         <item name="cornerSizeTopLeft">12dp</item>
         <item name="cornerSizeBottomLeft">12dp</item>
         <item name="cornerSizeBottomRight">12dp</item>
         <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="TransparentCard" parent="Widget.Material3.CardView.Filled">
+        <item name="android:backgroundTint">@android:color/transparent</item>
     </style>
 </resources>

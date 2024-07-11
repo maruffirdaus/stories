@@ -3,22 +3,22 @@ package dev.maruffirdaus.stories.ui.auth
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dev.maruffirdaus.stories.R
 import dev.maruffirdaus.stories.data.Result
 import dev.maruffirdaus.stories.databinding.FragmentLoginBinding
-import dev.maruffirdaus.stories.ui.MainViewModel
 import dev.maruffirdaus.stories.ui.ViewModelFactory
+import dev.maruffirdaus.stories.ui.auth.viewmodel.AuthViewModel
 import dev.maruffirdaus.stories.ui.main.MainActivity
 
 class LoginFragment : Fragment() {
     private lateinit var binding: FragmentLoginBinding
-    private lateinit var viewModel: MainViewModel
+    private lateinit var viewModel: AuthViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +43,7 @@ class LoginFragment : Fragment() {
 
     private fun obtainViewModel() {
         val factory = ViewModelFactory.getInstance(requireActivity().application, requireActivity())
-        viewModel = ViewModelProvider(requireActivity(), factory)[MainViewModel::class.java]
+        viewModel = ViewModelProvider(requireActivity(), factory)[AuthViewModel::class.java]
     }
 
     private fun setLoginButton() {

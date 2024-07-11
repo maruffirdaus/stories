@@ -5,11 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import com.google.gson.Gson
 import dev.maruffirdaus.stories.data.source.local.entity.StoryEntity
 import dev.maruffirdaus.stories.data.source.local.room.StoryDao
-import dev.maruffirdaus.stories.data.source.remote.response.SendResponse
-import dev.maruffirdaus.stories.data.source.remote.response.ErrorResponse
+import dev.maruffirdaus.stories.data.source.remote.response.GeneralResponse
+import dev.maruffirdaus.stories.data.source.remote.response.GetResponse
 import dev.maruffirdaus.stories.data.source.remote.response.LoginResponse
-import dev.maruffirdaus.stories.data.source.remote.response.RegisterResponse
-import dev.maruffirdaus.stories.data.source.remote.response.StoryResponse
+import dev.maruffirdaus.stories.data.source.remote.response.SendResponse
 import dev.maruffirdaus.stories.data.source.remote.retrofit.ApiService
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -22,7 +21,7 @@ class Repository private constructor(
     private val apiService: ApiService,
     private val storyDao: StoryDao
 ) {
-    private val registerResult = MediatorLiveData<Result<RegisterResponse>>()
+    private val registerResult = MediatorLiveData<Result<GeneralResponse>>()
     private val loginResult = MediatorLiveData<Result<LoginResponse>>()
     private val storyResult = MediatorLiveData<Result<List<StoryEntity>>>()
     private val sendResult = MediatorLiveData<Result<SendResponse>>()
@@ -31,26 +30,26 @@ class Repository private constructor(
         name: String,
         email: String,
         password: String
-    ): LiveData<Result<RegisterResponse>> {
+    ): LiveData<Result<GeneralResponse>> {
         registerResult.value = Result.Loading
         val client = apiService.register(name, email, password)
-        client.enqueue(object : Callback<RegisterResponse> {
+        client.enqueue(object : Callback<GeneralResponse> {
             override fun onResponse(
-                call: Call<RegisterResponse>,
-                response: Response<RegisterResponse>
+                call: Call<GeneralResponse>,
+                response: Response<GeneralResponse>
             ) {
                 if (response.isSuccessful) {
                     registerResult.value = Result.Success(response.body()!!)
                 } else {
                     val errorBody = Gson().fromJson(
                         response.errorBody()!!.string(),
-                        ErrorResponse::class.java
+                        GeneralResponse::class.java
                     )
                     registerResult.value = Result.Error(errorBody.message)
                 }
             }
 
-            override fun onFailure(call: Call<RegisterResponse>, t: Throwable) {
+            override fun onFailure(call: Call<GeneralResponse>, t: Throwable) {
                 registerResult.value = Result.Error(t.message.toString())
             }
         })
@@ -68,7 +67,7 @@ class Repository private constructor(
                 } else {
                     val errorBody = Gson().fromJson(
                         response.errorBody()!!.string(),
-                        ErrorResponse::class.java
+                        GeneralResponse::class.java
                     )
                     loginResult.value = Result.Error(errorBody.message)
                 }
@@ -85,8 +84,8 @@ class Repository private constructor(
     fun getStories(token: String): LiveData<Result<List<StoryEntity>>> {
         storyResult.value = Result.Loading
         val client = apiService.getStories(token)
-        client.enqueue(object : Callback<StoryResponse> {
-            override fun onResponse(call: Call<StoryResponse>, response: Response<StoryResponse>) {
+        client.enqueue(object : Callback<GetResponse> {
+            override fun onResponse(call: Call<GetResponse>, response: Response<GetResponse>) {
                 if (response.isSuccessful) {
                     val stories = response.body()?.listStory
                     val listStory = ArrayList<StoryEntity>()
@@ -109,7 +108,7 @@ class Repository private constructor(
                 }
             }
 
-            override fun onFailure(call: Call<StoryResponse>, t: Throwable) {
+            override fun onFailure(call: Call<GetResponse>, t: Throwable) {
                 storyResult.value = Result.Error(t.message.toString())
             }
         })
@@ -146,7 +145,7 @@ class Repository private constructor(
                 } else {
                     val errorBody = Gson().fromJson(
                         response.errorBody()!!.string(),
-                        ErrorResponse::class.java
+                        GeneralResponse::class.java
                     )
                     sendResult.value = Result.Error(errorBody.message)
                 }

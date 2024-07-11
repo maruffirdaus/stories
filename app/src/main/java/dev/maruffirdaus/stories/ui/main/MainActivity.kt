@@ -14,14 +14,14 @@ import androidx.navigation.ui.setupWithNavController
 import dev.maruffirdaus.stories.R
 import dev.maruffirdaus.stories.data.source.remote.response.LoginResult
 import dev.maruffirdaus.stories.databinding.ActivityMainBinding
-import dev.maruffirdaus.stories.ui.MainViewModel
 import dev.maruffirdaus.stories.ui.ViewModelFactory
 import dev.maruffirdaus.stories.ui.auth.AuthActivity
+import dev.maruffirdaus.stories.ui.main.viewmodel.MainViewModel
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private lateinit var viewModel: MainViewModel
     private var loginResult: LoginResult? = null
+    private lateinit var viewModel: MainViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
