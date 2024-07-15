@@ -31,6 +31,11 @@
     <string name="anything_to_say">Ada yang ingin dikatakan?</string>
     <string name="send">Kirim</string>
     <string name="can_not_be_empty">Tidak boleh kosong</string>
-    <string name="no_data">Tidak ada data.</string>
     <string name="language">Bahasa</string>
+    <string name="retry">Coba lagi</string>
+    <string name="scroll_up_to_see_recent_stories">Scroll ke atas untuk melihat cerita terbaru.</string>
+    <string name="scroll_up">Scroll ke atas</string>
+    <string name="nearby">Sekitar</string>
+    <string name="include_location">Sertakan lokasi</string>
+    <string name="permission_denied">Izin ditolak.</string>
 </resources>

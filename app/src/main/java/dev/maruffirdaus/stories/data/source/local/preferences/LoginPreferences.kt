@@ -1,4 +1,4 @@
-package dev.maruffirdaus.stories.data
+package dev.maruffirdaus.stories.data.source.local.preferences
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.map
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "login")
 
-class LoginPreferences private constructor(private val dataStore: DataStore<Preferences>){
+class LoginPreferences private constructor(private val dataStore: DataStore<Preferences>) {
     private val loginKey = stringSetPreferencesKey("login")
 
     fun getLoginResult(): Flow<Set<String>?> {

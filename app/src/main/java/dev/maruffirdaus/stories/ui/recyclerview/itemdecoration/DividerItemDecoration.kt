@@ -1,4 +1,4 @@
-package dev.maruffirdaus.stories.ui
+package dev.maruffirdaus.stories.ui.recyclerview.itemdecoration
 
 import android.content.Context
 import android.graphics.Canvas
@@ -10,7 +10,6 @@ import dev.maruffirdaus.stories.R
 
 class DividerItemDecoration(context: Context, resId: Int) : RecyclerView.ItemDecoration() {
     private val divider = ContextCompat.getDrawable(context, resId)
-    private val verticalMargin = context.resources.getDimensionPixelSize(R.dimen.dimen_8dp)
     private val horizontalMargin = context.resources.getDimensionPixelSize(R.dimen.dimen_16dp)
     private val dividerHeight = context.resources.getDimensionPixelSize(R.dimen.dimen_1dp)
 
@@ -22,7 +21,7 @@ class DividerItemDecoration(context: Context, resId: Int) : RecyclerView.ItemDec
     ) {
         super.getItemOffsets(outRect, view, parent, state)
         if (parent.getChildAdapterPosition(view) != (parent.adapter?.itemCount ?: 0) - 1) {
-            outRect.bottom = horizontalMargin + dividerHeight
+            outRect.bottom = dividerHeight
         }
     }
 
@@ -35,7 +34,7 @@ class DividerItemDecoration(context: Context, resId: Int) : RecyclerView.ItemDec
         for (i in 0..childCount - 2) {
             val child = parent.getChildAt(i)
             val params = child.layoutParams as RecyclerView.LayoutParams
-            val top = child.bottom + params.bottomMargin + verticalMargin
+            val top = child.bottom + params.bottomMargin
             val bottom = top + dividerHeight
 
             divider?.setBounds(left, top, right, bottom)

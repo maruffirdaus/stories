@@ -9,8 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dev.maruffirdaus.stories.R
-import dev.maruffirdaus.stories.data.LoginPreferences
-import dev.maruffirdaus.stories.data.dataStore
+import dev.maruffirdaus.stories.data.source.local.preferences.LoginPreferences
+import dev.maruffirdaus.stories.data.source.local.preferences.dataStore
 import dev.maruffirdaus.stories.data.source.remote.response.LoginResult
 import dev.maruffirdaus.stories.databinding.FragmentSettingsBinding
 import dev.maruffirdaus.stories.ui.ViewModelFactory

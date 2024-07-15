@@ -33,6 +33,11 @@
     <string name="anything_to_say">Anything to say?</string>
     <string name="send">Send</string>
     <string name="can_not_be_empty">Can\'t be empty</string>
-    <string name="no_data">No data.</string>
     <string name="language">Language</string>
+    <string name="retry">Retry</string>
+    <string name="scroll_up_to_see_recent_stories">Scroll up to see recent stories.</string>
+    <string name="scroll_up">Scroll up</string>
+    <string name="nearby">Nearby</string>
+    <string name="include_location">Include location</string>
+    <string name="permission_denied">Permission denied.</string>
 </resources>

@@ -3,7 +3,6 @@ package dev.maruffirdaus.stories.data.source.remote.retrofit
 import dev.maruffirdaus.stories.data.source.remote.response.GeneralResponse
 import dev.maruffirdaus.stories.data.source.remote.response.GetResponse
 import dev.maruffirdaus.stories.data.source.remote.response.LoginResponse
-import dev.maruffirdaus.stories.data.source.remote.response.SendResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -14,6 +13,7 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 
 interface ApiService {
     @FormUrlEncoded
@@ -32,8 +32,16 @@ interface ApiService {
     ): Call<LoginResponse>
 
     @GET("stories")
-    fun getStories(
-        @Header("Authorization") token: String
+    suspend fun getStories(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int = 1,
+        @Query("size") size: Int = 20
+    ): GetResponse
+
+    @GET("stories")
+    fun getStoriesWithLocation(
+        @Header("Authorization") token: String,
+        @Query("location") location: Int = 1
     ): Call<GetResponse>
 
     @Multipart
@@ -41,6 +49,16 @@ interface ApiService {
     fun sendStory(
         @Header("Authorization") token: String,
         @Part file: MultipartBody.Part,
+        @Part("description") desc: RequestBody
+    ): Call<GeneralResponse>
+
+    @Multipart
+    @POST("stories")
+    fun sendStoryWithLocation(
+        @Header("Authorization") token: String,
+        @Part file: MultipartBody.Part,
         @Part("description") desc: RequestBody,
-    ): Call<SendResponse>
+        @Part("lat") lat: RequestBody,
+        @Part("lon") lon: RequestBody
+    ): Call<GeneralResponse>
 }

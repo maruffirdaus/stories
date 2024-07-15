@@ -8,22 +8,20 @@ import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import dev.maruffirdaus.stories.R
-import dev.maruffirdaus.stories.data.LoginPreferences
-import dev.maruffirdaus.stories.data.Result
-import dev.maruffirdaus.stories.data.dataStore
+import dev.maruffirdaus.stories.data.source.local.preferences.LoginPreferences
+import dev.maruffirdaus.stories.data.source.local.preferences.dataStore
 import dev.maruffirdaus.stories.data.source.remote.response.LoginResult
 import dev.maruffirdaus.stories.databinding.FragmentHomeBinding
-import dev.maruffirdaus.stories.ui.DividerItemDecoration
-import dev.maruffirdaus.stories.ui.StoryAdapter
 import dev.maruffirdaus.stories.ui.ViewModelFactory
+import dev.maruffirdaus.stories.ui.adapter.LoadingStateAdapter
+import dev.maruffirdaus.stories.ui.adapter.StoryAdapter
 import dev.maruffirdaus.stories.ui.main.viewmodel.MainViewModel
-import kotlinx.coroutines.delay
+import dev.maruffirdaus.stories.ui.recyclerview.itemdecoration.DividerItemDecoration
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class HomeFragment : Fragment() {
@@ -45,9 +43,9 @@ class HomeFragment : Fragment() {
         getLoginResult()
         obtainViewModel()
         setToolbarMenuItemClick()
-        setupScrollListener()
         setupRecyclerView()
         setNewStoryButton()
+        showScrollUpSnackbar()
     }
 
     private val launcherGallery =
@@ -77,92 +75,54 @@ class HomeFragment : Fragment() {
     }
 
     private fun setToolbarMenuItemClick() {
-        with(binding) {
-            toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.refresh -> {
-                        nestedScrollView.smoothScrollTo(nestedScrollView.scrollX, 0)
-                        viewModel.getStories("Bearer " + (loginResult?.token ?: "token"))
-                        true
-                    }
-
-                    R.id.action_logout -> {
-                        MaterialAlertDialogBuilder(requireActivity())
-                            .setTitle(getString(R.string.logout) + "?")
-                            .setMessage(getString(R.string.you_will_be_logged_out))
-                            .setPositiveButton(getString(R.string.yes)) { _, _ ->
-                                viewModel.clearLoginResult()
-                            }
-                            .setNegativeButton(getString(R.string.no)) { dialog, _ ->
-                                dialog.dismiss()
-                            }
-                            .show()
-                        true
-                    }
-
-                    else -> false
+        binding.toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.refresh -> {
+                    adapter.refresh()
+                    showScrollUpSnackbar()
+                    true
                 }
-            }
-        }
-    }
 
-    private fun setupScrollListener() {
-        with(binding) {
-            nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-                if (scrollY == 0) {
-                    newStoryButton.extend()
-                } else {
-                    newStoryButton.shrink()
+                R.id.action_logout -> {
+                    MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle(getString(R.string.logout) + "?")
+                        .setMessage(getString(R.string.you_will_be_logged_out))
+                        .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                            viewModel.clearLoginResult()
+                        }
+                        .setNegativeButton(getString(R.string.no)) { dialog, _ ->
+                            dialog.dismiss()
+                        }
+                        .show()
+                    true
                 }
+
+                else -> false
             }
         }
     }
 
     private fun setupRecyclerView() {
         with(binding) {
-            recyclerView.isNestedScrollingEnabled = false
             recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-            recyclerView.addItemDecoration(DividerItemDecoration(requireActivity(), R.drawable.divider))
-            recyclerView.adapter = adapter
-            viewModel.getStories("Bearer " + (loginResult?.token ?: "token"))
-
-            viewModel.listStory.observe(viewLifecycleOwner) {
-                when (it) {
-                    is Result.Loading -> {
-                        showLoadingBar()
-                    }
-
-                    is Result.Success -> {
-                        lifecycleScope.launch {
-                            adapter.setListStory(it.data)
-                            delay(1000)
-                            hideLoadingBar()
-                            if (adapter.itemCount == 0) {
-                                MaterialAlertDialogBuilder(requireActivity())
-                                    .setMessage(getString(R.string.no_data))
-                                    .setPositiveButton(getString(R.string.close)) { dialog, _ ->
-                                        dialog.dismiss()
-                                    }
-                                    .show()
-                            }
-                        }
-                    }
-
-                    is Result.Error -> {
-                        lifecycleScope.launch {
-                            delay(1000)
-                            hideLoadingBar()
-                            MaterialAlertDialogBuilder(requireActivity())
-                                .setTitle(getString(R.string.error))
-                                .setMessage(it.error + ".")
-                                .setPositiveButton(getString(R.string.close)) { dialog, _ ->
-                                    dialog.dismiss()
-                                }
-                                .show()
-                        }
-                    }
+            recyclerView.itemAnimator = null
+            recyclerView.addItemDecoration(
+                DividerItemDecoration(
+                    requireActivity(),
+                    R.drawable.divider
+                )
+            )
+            recyclerView.adapter = adapter.withLoadStateFooter(
+                footer = LoadingStateAdapter {
+                    adapter.retry()
                 }
-            }
+            )
+            recyclerView.scrollToPosition(0)
+
+            viewModel.getStories("Bearer " + (loginResult?.token ?: "token"))
+                .observe(viewLifecycleOwner) {
+                    adapter.submitData(lifecycle, it)
+                }
         }
     }
 
@@ -178,11 +138,18 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun showLoadingBar() {
-        binding.loadingBar.visibility = View.VISIBLE
-    }
-
-    private fun hideLoadingBar() {
-        binding.loadingBar.visibility = View.GONE
+    private fun showScrollUpSnackbar() {
+        with(binding) {
+            Snackbar.make(
+                root,
+                getString(R.string.scroll_up_to_see_recent_stories),
+                Snackbar.LENGTH_SHORT
+            )
+                .setAnchorView(newStoryButton)
+                .setAction(getString(R.string.scroll_up)) {
+                    recyclerView.smoothScrollToPosition(0)
+                }
+                .show()
+        }
     }
 }
