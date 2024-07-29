@@ -1,1 +1,1 @@
-![Stories](https://github.com/user-attachments/assets/75fbe413-4314-4c64-b1f4-65a9b991bd08)
+![Stories](https://github.com/user-attachments/assets/1a9e7782-b9d9-4b61-807b-e219e69e389a)
