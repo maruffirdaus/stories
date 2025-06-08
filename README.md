@@ -22,11 +22,16 @@ A mini social media app, built with Kotlin. This project was created as the subm
 ### Languages:
 * **Kotlin**
 
+## UI:
+* **XML Layouts**
+
 ### Libraries & APIs:
+* **ViewModel**
+* **LiveData**
 * **Retrofit:** Used to interact with the Dicoding Story API.
+* **Room & RemoteMediator:** Used to enable online-offline support via local caching.
 * **DataStore:** Used to store login session data.
 * **Paging 3:** Used to load the story data continuously.
-* **RemoteMediator & Room:** Used to enable online-offline support via local caching.
 * **Google Maps API:** Used to display stories with location.
 
 ## How to Run:
@@ -49,6 +54,6 @@ A mini social media app, built with Kotlin. This project was created as the subm
     * Navigate to the cloned `stories` folder and select it.
 3.  **Sync Gradle:**
     * Wait for Android Studio to index files and sync the project with its Gradle files.
-4.  **Run the App:**
+4.  **Run the app:**
     * Select an available emulator or connect a physical Android device.
     * Click the `Run 'app'` button (green play icon).
