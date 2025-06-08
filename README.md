@@ -22,7 +22,7 @@ A mini social media app, built with Kotlin. This project was created as the subm
 ### Languages:
 * **Kotlin**
 
-## UI:
+### UI:
 * **XML Layouts**
 
 ### Libraries & APIs:
